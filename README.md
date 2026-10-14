@@ -10,6 +10,7 @@ This repository is the starting point for an independently indexed search engine
 
 - `native/`: C tokenizer and C++ search core, built with CMake.
 - `server/`: Node.js HTTP API and persistent document index.
+- `auth/`: Google OAuth sign-in, PostgreSQL-backed Quartz identities and sessions; see [auth setup](auth/README.md).
 - `web/`: responsive search interface.
 - `android/`: Android WebView client.
 - `tools/Quartz.Indexer/`: .NET CLI for submitting documents.
@@ -24,7 +25,7 @@ npm test
 npm start
 ```
 
-Open `web/index.html` locally or serve `web/` with any static file server. Configure `QUARTZ_DATA_DIR` and `BRAVE_SEARCH_API_KEY` only if you need persistence customization or optional external fallback; keep secrets server-side.
+Serve `web/` over HTTP and configure `web/config.js` for your search and auth service URLs. For Google Sign-In and `@quartz.com` account IDs, follow [auth/README.md](auth/README.md). Keep credentials server-side.
 
 ## Native build
 
