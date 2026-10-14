@@ -1,0 +1,1 @@
+{ "USER_CANCELED":"Sign-in canceled.", "NETWORK_ERROR":"Check your connection and try again.", "CONFIGURATION_ERROR":"Google sign-in is not configured correctly.", "TOKEN_REJECTED":"Please sign in again.", "SERVER_UNAVAILABLE":"Quartz sign-in is temporarily unavailable.", "UNKNOWN":"Sign-in could not be completed. Please try again." }

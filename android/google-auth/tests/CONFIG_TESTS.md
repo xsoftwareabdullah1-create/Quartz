@@ -1,0 +1,4 @@
+- Verify package name and SHA-1 in Cloud Console.
+- Register debug and release signing fingerprints.
+- Verify exact backend callback URI.
+- Verify Web client ID is configured as ID-token audience.

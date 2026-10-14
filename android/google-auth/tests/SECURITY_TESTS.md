@@ -1,0 +1,5 @@
+- Scan source/APK for secrets.
+- Confirm HTTPS and standard certificate validation.
+- Confirm backend rejects wrong issuer/audience/expiry.
+- Confirm tokens and cookies never appear in logs.
+- Confirm logout invalidates server session.

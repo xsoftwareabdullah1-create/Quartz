@@ -1,0 +1,1 @@
+{ "scopes": ["openid", "email", "profile"], "purpose": "basic identity only", "sensitive_scopes_requested": false }

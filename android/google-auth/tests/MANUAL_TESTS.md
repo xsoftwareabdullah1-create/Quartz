@@ -1,0 +1,5 @@
+- Cancel sign-in without crash.
+- Test offline mode and server errors.
+- Reject wrong-audience, expired and unverified tokens server-side.
+- Confirm alias collision handling and logout.
+- Confirm no token in logcat and alias is not described as mailbox.

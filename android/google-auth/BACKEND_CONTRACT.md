@@ -1,0 +1,1 @@
+Before native sign-in goes live, backend must verify Google ID token signature, issuer, audience, expiry and email_verified, map stable sub, provision Quartz alias, and establish app session. Current backend only supports browser OAuth.
