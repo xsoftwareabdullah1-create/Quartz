@@ -1,0 +1,1 @@
+export function normalizeUrl(input){const u=new URL(input);if(!['http:','https:'].includes(u.protocol))throw Error('unsupported protocol');u.hash='';u.hostname=u.hostname.toLowerCase();if((u.protocol==='https:'&&u.port==='443')||(u.protocol==='http:'&&u.port==='80'))u.port='';return u.toString();}
