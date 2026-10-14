@@ -1,0 +1,21 @@
+{
+  "name": "@quartz/auth-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Google OAuth sign-in and Quartz identity provisioning",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "check": "node --check src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "connect-pg-simple": "^10.0.0",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "google-auth-library": "^9.15.1",
+    "pg": "^8.13.1"
+  }
+}
