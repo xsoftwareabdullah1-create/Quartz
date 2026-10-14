@@ -1,0 +1,4 @@
+#pragma once
+#define QUARTZ_VERSION_MAJOR 0
+#define QUARTZ_VERSION_MINOR 1
+#define QUARTZ_VERSION_PATCH 0
