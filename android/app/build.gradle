@@ -1,0 +1,2 @@
+plugins { id 'com.android.application' }
+android { namespace 'dev.quartz.search'; compileSdk 35; defaultConfig { applicationId 'dev.quartz.search'; minSdk 23; targetSdk 35; versionCode 1; versionName '0.1.0' } }
