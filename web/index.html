@@ -15,13 +15,29 @@
     <a class="top-link" href="#results">Search</a>
     <div class="account">
       <div id="account-status" class="account-status" aria-live="polite">Sign in to Quartz</div>
+      <button class="email-open-button" id="email-signin-open" type="button">Use email</button>
       <a class="google-button" id="google-signin" href="#" rel="nofollow" aria-label="Continue with Google">
         <svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.05 13.22l7.98 6.19C11.97 13.72 17.48 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 37.96 46.98 31.82 46.98 24.55z"/><path fill="#FBBC05" d="M10.03 28.59A14.4 14.4 0 0 1 9.25 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.53 2.57 10.78l7.46-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.14 1.44-4.89 2.3-8.18 2.3-6.52 0-12.03-4.22-13.97-9.91l-7.98 6.19C6.51 43.62 14.62 48 24 48z"/></svg>
-        <span>Sign in</span>
+        <span>Google</span>
       </a>
       <button class="signout" id="google-signout" type="button" hidden>Sign out</button>
     </div>
   </nav>
+  <section id="email-signin-panel" class="email-panel" aria-labelledby="email-panel-title" hidden>
+    <div class="email-panel-heading"><h2 id="email-panel-title">Sign in with email</h2><button id="email-signin-close" type="button" class="panel-close" aria-label="Close email sign-in">×</button></div>
+    <p class="email-panel-copy">We’ll email you a one-time code. No password needed.</p>
+    <form id="email-request-form">
+      <label for="email-address">Email address</label>
+      <input id="email-address" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required>
+      <button id="email-send-code" class="email-submit" type="submit">Send sign-in code</button>
+    </form>
+    <form id="email-verify-form" hidden>
+      <label for="email-code">Six-digit code</label>
+      <input id="email-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="000000" required>
+      <button id="email-verify-code" class="email-submit" type="submit">Verify and sign in</button>
+    </form>
+    <p id="email-auth-message" class="email-auth-message" role="status" aria-live="polite"></p>
+  </section>
   <main>
     <section class="hero" aria-label="Quartz search">
       <a class="brand" href="./" aria-label="Quartz home">
