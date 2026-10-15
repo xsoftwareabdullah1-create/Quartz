@@ -1,88 +1,77 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="Search the Quartz independent web index.">
-  <title>Quartz Search</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fff">
+<meta name="description" content="Quartz Search — discover the web and follow current affairs."><title>Quartz Search</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <nav class="topbar" aria-label="Main navigation">
-    <a class="top-link" href="#about">About</a>
-    <a class="top-link" href="#results">Search</a>
-    <div class="account">
-      <div id="account-status" class="account-status" aria-live="polite">Sign in to Quartz</div>
-      <button class="email-open-button" id="email-signin-open" type="button">Use email</button>
-      <a class="google-button" id="google-signin" href="#" rel="nofollow" aria-label="Continue with Google">
-        <svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.05 13.22l7.98 6.19C11.97 13.72 17.48 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 37.96 46.98 31.82 46.98 24.55z"/><path fill="#FBBC05" d="M10.03 28.59A14.4 14.4 0 0 1 9.25 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.53 2.57 10.78l7.46-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.14 1.44-4.89 2.3-8.18 2.3-6.52 0-12.03-4.22-13.97-9.91l-7.98 6.19C6.51 43.62 14.62 48 24 48z"/></svg>
-        <span>Google</span>
-      </a>
-      <button class="signout" id="google-signout" type="button" hidden>Sign out</button>
+<nav class="topbar" aria-label="Main navigation">
+  <a class="top-link" href="#news">News</a><a class="top-link" href="#about">About</a>
+  <div class="more-menu-wrap">
+    <button class="more-menu-button" id="more-menu-button" type="button" aria-label="More options" aria-expanded="false" aria-controls="more-menu">⋮</button>
+    <div class="more-menu" id="more-menu" hidden>
+      <button type="button" id="private-search-toggle" role="switch" aria-checked="false"><span class="menu-symbol">◉</span><span><strong>Private Search</strong><small>Clear this page's query and results</small></span><span class="switch-track" aria-hidden="true"><span></span></span></button>
+      <button type="button" id="clear-search-menu"><span class="menu-symbol">×</span><span><strong>Clear Search</strong><small>Clear query and results</small></span></button>
+      <a href="#news" id="news-menu-link"><span class="menu-symbol">▤</span><span><strong>Current affairs & news</strong><small>Explore latest topics</small></span></a>
+      <a href="#about" id="about-menu-link"><span class="menu-symbol">ⓘ</span><span><strong>About Quartz</strong><small>Independent search project</small></span></a>
     </div>
-    <div class="more-menu-wrap">
-      <button class="more-menu-button" id="more-menu-button" type="button" aria-label="More options" aria-expanded="false" aria-controls="more-menu">⋮</button>
-      <div class="more-menu" id="more-menu" hidden>
-        <button type="button" id="private-search-toggle" role="switch" aria-checked="false">
-          <span class="menu-symbol">◉</span><span><strong>Private Search</strong><small>Clear this page's query and results</small></span>
-          <span class="switch-track" aria-hidden="true"><span></span></span>
-        </button>
-        <button type="button" id="clear-search-menu"><span class="menu-symbol">×</span><span><strong>Clear Search</strong><small>Clear query and results</small></span></button>
-        <a href="#about" id="about-menu-link"><span class="menu-symbol">ⓘ</span><span><strong>About Quartz</strong><small>Independent search project</small></span></a>
+  </div>
+  <div class="account-menu-wrap">
+    <button class="account-avatar" id="account-menu-button" type="button" aria-label="Open Quartz account" aria-expanded="false" aria-controls="account-menu"><span id="account-avatar-letter">Q</span></button>
+    <section class="account-menu" id="account-menu" hidden aria-label="Quartz account">
+      <div class="account-menu-top"><div class="account-avatar large"><span id="account-avatar-large">Q</span></div><div><strong>Your Quartz account</strong><p id="account-menu-caption">Sign in to sync your account</p></div></div>
+      <div class="account" id="account-controls">
+        <div id="account-status" class="account-status" aria-live="polite">Not signed in</div>
+        <a class="google-button" id="google-signin" href="#" rel="nofollow" aria-label="Continue with Google"><svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.05 13.22l7.98 6.19C11.97 13.72 17.48 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 37.96 46.98 31.82 46.98 24.55z"/><path fill="#FBBC05" d="M10.03 28.59A14.4 14.4 0 0 1 9.25 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.53 2.57 10.78l7.46-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.14 1.44-4.89 2.3-8.18 2.3-6.52 0-12.03-4.22-13.97-9.91l-7.98 6.19C6.51 43.62 14.62 48 24 48z"/></svg><span>Continue with Google</span></a>
+        <button class="email-open-button" id="email-signin-open" type="button">Continue with email</button>
+        <button class="signout" id="google-signout" type="button" hidden>Sign out</button>
       </div>
-    </div>
-  </nav>
-  <section id="email-signin-panel" class="email-panel" aria-labelledby="email-panel-title" hidden>
-    <div class="email-panel-heading"><h2 id="email-panel-title">Sign in with email</h2><button id="email-signin-close" type="button" class="panel-close" aria-label="Close email sign-in">×</button></div>
-    <p class="email-panel-copy">We’ll email you a one-time code. No password needed.</p>
-    <form id="email-request-form">
-      <label for="email-address">Email address</label>
-      <input id="email-address" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required>
-      <button id="email-send-code" class="email-submit" type="submit">Send sign-in code</button>
-    </form>
-    <form id="email-verify-form" hidden>
-      <label for="email-code">Six-digit code</label>
-      <input id="email-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="000000" required>
-      <button id="email-verify-code" class="email-submit" type="submit">Verify and sign in</button>
-    </form>
-    <p id="email-auth-message" class="email-auth-message" role="status" aria-live="polite"></p>
+      <p class="account-menu-foot">Your search works without signing in.</p>
+    </section>
+  </div>
+</nav>
+<section id="email-signin-panel" class="email-panel" aria-labelledby="email-panel-title" hidden>
+  <div class="email-panel-heading"><h2 id="email-panel-title">Sign in with email</h2><button id="email-signin-close" type="button" class="panel-close" aria-label="Close email sign-in">×</button></div>
+  <p class="email-panel-copy">We’ll email you a one-time code. No password needed.</p>
+  <form id="email-request-form"><label for="email-address">Email address</label><input id="email-address" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required><button id="email-send-code" class="email-submit" type="submit">Send sign-in code</button></form>
+  <form id="email-verify-form" hidden><label for="email-code">Six-digit code</label><input id="email-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="000000" required><button id="email-verify-code" class="email-submit" type="submit">Verify and sign in</button></form>
+  <p id="email-auth-message" class="email-auth-message" role="status" aria-live="polite"></p>
+</section>
+<main>
+  <section class="hero" aria-label="Quartz search">
+    <a class="brand" href="./" aria-label="Quartz home"><span class="brand-letter" aria-hidden="true">Q</span><span class="brand-word">Quartz</span></a>
+    <p class="tagline">Search the web. Stay curious.</p>
+    <form id="search" role="search"><div class="searchbox"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="q" name="q" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search Quartz" placeholder="Search anything" required><button class="clear-button" type="button" id="clear-query" aria-label="Clear search" hidden>×</button></div>
+    <div class="search-actions"><button class="action-button primary-action" type="submit">Quartz Search</button><button class="action-button" type="button" id="lucky-search">I'm Feeling Curious</button></div></form>
+    <p class="search-hint">Independent search, with the topics that matter to you.</p><p id="private-mode-note" class="private-mode-note" hidden>◉ Private search is on · this page does not save query history</p>
   </section>
-  <main>
-    <section class="hero" aria-label="Quartz search">
-      <a class="brand" href="./" aria-label="Quartz home">
-        <span class="brand-letter" aria-hidden="true">Q</span><span class="brand-word">Quartz</span>
-      </a>
-      <p class="tagline">A clearer way to find what you need.</p>
-      <form id="search" role="search">
-        <div class="searchbox">
-          <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
-          <input id="q" name="q" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search Quartz" placeholder="Search the web" required>
-          <button class="clear-button" type="button" id="clear-query" aria-label="Clear search" hidden>×</button>
-        </div>
-        <div class="search-actions">
-          <button class="action-button primary-action" type="submit">Quartz Search</button>
-          <button class="action-button" type="button" id="lucky-search">Explore Quartz</button>
-        </div>
-      </form>
-      <p class="search-hint">Search results from the Quartz independent index</p><p id="private-mode-note" class="private-mode-note" hidden>◉ Private search is on · this page does not save query history</p>
-    </section>
-    <section class="results-area" id="results-area" aria-live="polite">
-      <p id="status" class="status"></p>
-      <section id="results" class="results"></section>
-    </section>
-    <section id="about" class="about"><span class="about-dot"></span> Independent search. Built with Quartz.</section>
-  </main>
-  <footer><span>Quartz</span><span>Explore the web, one query at a time.</span></footer>
-  <script src="config.js"></script>
-  <script src="app.js"></script>
-  <script src="auth.js"></script>
-  <script>
-    const q=document.querySelector('#q'), clear=document.querySelector('#clear-query');
-    q.addEventListener('input',()=>{clear.hidden=!q.value;});
-    clear.addEventListener('click',()=>{q.value='';clear.hidden=true;q.focus();});
-    document.querySelector('#lucky-search').addEventListener('click',()=>{q.focus();q.placeholder='What would you like to discover?';});
-  </script>
-</body>
-</html>
+  <section class="news-section" id="news" aria-labelledby="news-title">
+    <div class="news-heading"><div><p class="eyebrow">DISCOVER</p><h1 id="news-title">Current affairs & news</h1><p class="news-subtitle">Explore the latest coverage by topic.</p></div><a class="news-all" href="https://news.google.com/" target="_blank" rel="noopener noreferrer">More news <span aria-hidden="true">↗</span></a></div>
+    <div class="news-grid">
+      <a class="news-card news-india" href="https://news.google.com/search?q=India%20latest%20news&hl=en-IN&gl=IN&ceid=IN%3Aen" target="_blank" rel="noopener noreferrer"><div class="news-art art-india"><span>INDIA</span><b aria-hidden="true">✳</b></div><div class="news-card-body"><span class="news-category">INDIA</span><h2>India: latest headlines</h2><p>National updates, public policy and important developments.</p><span class="news-read">Read latest coverage ↗</span></div></a>
+      <a class="news-card news-world" href="https://news.google.com/search?q=world%20news%20latest&hl=en-IN&gl=IN&ceid=IN%3Aen" target="_blank" rel="noopener noreferrer"><div class="news-art art-world"><span>WORLD</span><b aria-hidden="true">◎</b></div><div class="news-card-body"><span class="news-category">WORLD</span><h2>World in focus</h2><p>Global affairs, diplomacy and major international stories.</p><span class="news-read">Read latest coverage ↗</span></div></a>
+      <a class="news-card news-business" href="https://news.google.com/search?q=business%20economy%20news&hl=en-IN&gl=IN&ceid=IN%3Aen" target="_blank" rel="noopener noreferrer"><div class="news-art art-business"><span>ECONOMY</span><b aria-hidden="true">↗</b></div><div class="news-card-body"><span class="news-category">BUSINESS</span><h2>Business & economy</h2><p>Markets, jobs, industry and economic policy.</p><span class="news-read">Read latest coverage ↗</span></div></a>
+      <a class="news-card news-tech" href="https://news.google.com/search?q=technology%20science%20news&hl=en-IN&gl=IN&ceid=IN%3Aen" target="_blank" rel="noopener noreferrer"><div class="news-art art-tech"><span>SCIENCE + TECH</span><b aria-hidden="true">⌘</b></div><div class="news-card-body"><span class="news-category">SCIENCE & TECHNOLOGY</span><h2>What's new in tech</h2><p>Science, AI, gadgets and discoveries shaping tomorrow.</p><span class="news-read">Read latest coverage ↗</span></div></a>
+      <a class="news-card news-sports" href="https://news.google.com/search?q=sports%20news%20India&hl=en-IN&gl=IN&ceid=IN%3Aen" target="_blank" rel="noopener noreferrer"><div class="news-art art-sports"><span>SPORTS</span><b aria-hidden="true">◉</b></div><div class="news-card-body"><span class="news-category">SPORTS</span><h2>Sports briefing</h2><p>Cricket, football and headlines from the world of sport.</p><span class="news-read">Read latest coverage ↗</span></div></a>
+      <a class="news-card news-current" href="https://news.google.com/search?q=current%20affairs%20India&hl=en-IN&gl=IN&ceid=IN%3Aen" target="_blank" rel="noopener noreferrer"><div class="news-art art-current"><span>EXPLAINED</span><b aria-hidden="true">≡</b></div><div class="news-card-body"><span class="news-category">CURRENT AFFAIRS</span><h2>Know the context</h2><p>Follow developing stories and explore background reporting.</p><span class="news-read">Read latest coverage ↗</span></div></a>
+    </div>
+    <p class="news-disclaimer">Headlines open in Google News so you can see up-to-date reporting from multiple publishers.</p>
+  </section>
+  <section class="results-area" id="results-area" aria-live="polite"><p id="status" class="status"></p><section id="results" class="results"></section></section>
+  <section id="about" class="about"><span class="about-dot"></span> Independent search. Built with Quartz.</section>
+</main>
+<footer><span>Quartz</span><span>Search the web. Stay informed.</span></footer>
+<script src="config.js"></script><script src="app.js"></script><script src="auth.js"></script>
+<script>
+const q=document.querySelector('#q'),clear=document.querySelector('#clear-query');q.addEventListener('input',()=>{clear.hidden=!q.value;});clear.addEventListener('click',()=>{q.value='';clear.hidden=true;q.focus();});
+document.querySelector('#lucky-search').addEventListener('click',()=>{const topics=['India current affairs','science and technology','world news','business and economy'];q.value=topics[Math.floor(Math.random()*topics.length)];document.querySelector('#search').requestSubmit();});
+const accountButton=document.querySelector('#account-menu-button'),accountMenu=document.querySelector('#account-menu');
+const closeAccount=()=>{accountMenu.hidden=true;accountButton.setAttribute('aria-expanded','false');};
+accountButton.addEventListener('click',e=>{e.stopPropagation();accountMenu.hidden=!accountMenu.hidden;accountButton.setAttribute('aria-expanded',String(!accountMenu.hidden));});
+accountMenu.addEventListener('click',e=>e.stopPropagation());
+document.addEventListener('click',()=>closeAccount());document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAccount();});
+const accountObserver=new MutationObserver(()=>{const status=document.querySelector('#account-status').textContent||'';const signed=/Signed in as/i.test(status);const label=signed?(status.match(/Signed in as\s+([^·]+)/i)?.[1]?.trim()||'Q'):'Q';document.querySelector('#account-avatar-letter').textContent=label.charAt(0).toUpperCase();document.querySelector('#account-avatar-large').textContent=label.charAt(0).toUpperCase();document.querySelector('#account-menu-caption').textContent=signed?label:'Sign in to sync your account';});
+accountObserver.observe(document.querySelector('#account-status'),{childList:true,characterData:true,subtree:true});
+</script>
+</body></html>
