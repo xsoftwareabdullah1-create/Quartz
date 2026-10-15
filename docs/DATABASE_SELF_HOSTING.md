@@ -1,5 +1,7 @@
 # Quartz data store, self-hosting and recovery
 
+**Standalone schema repository:** https://github.com/xsoftwareabdullah1-create/Database. The canonical additive SQL migration is [migrations/001_user_data.sql](https://github.com/xsoftwareabdullah1-create/Database/blob/main/migrations/001_user_data.sql); a synchronized copy is kept at [auth/migrations/001_user_data.sql](../auth/migrations/001_user_data.sql) in Quartz.
+
 ## Current deployment / safety
 
 Quartz currently uses the existing PostgreSQL 16 database `quartz-auth-db` and the `quartz-auth-service` for sign-in. This change is additive: it creates new tables and indexes only; it does not drop or rename existing tables, rewrite user records, or change the existing sign-in routes. The application runs these idempotent `CREATE TABLE IF NOT EXISTS` migrations at startup.
