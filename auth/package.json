@@ -1,8 +1,8 @@
 {
   "name": "@quartz/auth-service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Google OAuth sign-in and Quartz identity provisioning",
+  "description": "Google OAuth and email one-time-code sign-in for Quartz",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -16,6 +16,7 @@
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "google-auth-library": "^9.15.1",
+    "nodemailer": "^6.10.1",
     "pg": "^8.13.1"
   }
 }
