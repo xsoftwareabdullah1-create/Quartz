@@ -69,3 +69,7 @@ File records hold metadata only. File bytes should live on a self-hosted persist
 6. Validate and monitor before switching traffic. Keep a rollback plan: point `DATABASE_URL` and frontend `authBase` back to the old service only if no writes occurred on the new target, or reconcile those writes first.
 
 This document is operational guidance, not a claim that a backup or migration has already been run.
+
+## Schema source repository
+
+The reusable Quartz data-schema package and SQL migration live in [xsoftwareabdullah1-create/Database](https://github.com/xsoftwareabdullah1-create/Database). The auth service installs that package from GitHub and calls its additive migrations after the existing `quartz_users` table is initialized. Keep schema changes in the Database repository first, then update the Quartz dependency/review integration before deploying.
