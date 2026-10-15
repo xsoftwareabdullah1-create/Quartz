@@ -17,6 +17,7 @@
     "express-session": "^1.18.1",
     "google-auth-library": "^9.15.1",
     "nodemailer": "^6.10.1",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "@xsoftwareabdullah1-create/quartz-database": "github:xsoftwareabdullah1-create/Database#main"
   }
 }
