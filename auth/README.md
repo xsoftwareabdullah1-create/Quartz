@@ -17,18 +17,16 @@ Quartz supports Google OAuth and passwordless email sign-in using a six-digit, o
 ## Deployment configuration
 Provision PostgreSQL and deploy this service behind HTTPS. Set `QUARTZ_WEB_URL` to the exact origin serving the Quartz website. Configure the static website's `web/config.js` `authBase` value to the deployed auth service URL (not localhost).
 
-Required server environment variables:
+Required server environment variables (Google OAuth settings are optional if you want email-only sign-in):
 ```sh
 DATABASE_URL=postgresql://USER:PASSWORD@DB_HOST:5432/DB_NAME
-GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-google-client-secret
 SESSION_SECRET=generate-a-random-secret-at-least-32-characters-long
 QUARTZ_PUBLIC_URL=https://auth.example-host.com
 QUARTZ_WEB_URL=https://search.example-host.com
 PORT=8788
 ```
 
-To enable email-code sign-in, set SMTP credentials in the server's secret manager:
+To enable Google sign-in too, set both `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` and register the callback URL above. To enable email-code sign-in, set SMTP credentials in the server's secret manager:
 ```sh
 SMTP_HOST=smtp.your-mail-provider.com
 SMTP_PORT=587
