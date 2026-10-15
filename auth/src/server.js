@@ -5,14 +5,16 @@ const connectPgSimple=require('connect-pg-simple');
 const nodemailer=require('nodemailer');
 const {OAuth2Client}=require('google-auth-library');
 const crypto=require('node:crypto');
-const required=['DATABASE_URL','SESSION_SECRET','QUARTZ_PUBLIC_URL','QUARTZ_WEB_URL'];
+const required=['DATABASE_URL','SESSION_SECRET','QUARTZ_WEB_URL'];
+const publicUrl=process.env.QUARTZ_PUBLIC_URL||process.env.RENDER_EXTERNAL_URL;
+if(!publicUrl){console.error('Missing required environment variable: QUARTZ_PUBLIC_URL (or Render RENDER_EXTERNAL_URL).');process.exit(1);}
 for(const key of required){if(!process.env[key]){console.error('Missing required environment variable: '+key);process.exit(1);}}
 if(process.env.SESSION_SECRET.length<32){console.error('SESSION_SECRET must contain at least 32 characters.');process.exit(1);}
 const app=express(),pool=new pg.Pool({connectionString:process.env.DATABASE_URL,ssl:process.env.DATABASE_SSL==='disable'?false:{rejectUnauthorized:true}});
-const callback=new URL('/auth/google/callback',process.env.QUARTZ_PUBLIC_URL).toString();
+const callback=new URL('/auth/google/callback',publicUrl).toString();
 const googleReady=Boolean(process.env.GOOGLE_CLIENT_ID&&process.env.GOOGLE_CLIENT_SECRET);
 const oauth=googleReady?new OAuth2Client(process.env.GOOGLE_CLIENT_ID,process.env.GOOGLE_CLIENT_SECRET,callback):null;
-const PgStore=connectPgSimple(session),webOrigin=new URL(process.env.QUARTZ_WEB_URL).origin,cookieSecure=new URL(process.env.QUARTZ_PUBLIC_URL).protocol==='https:';
+const PgStore=connectPgSimple(session),webOrigin=new URL(process.env.QUARTZ_WEB_URL).origin,cookieSecure=new URL(publicUrl).protocol==='https:';
 const mailReady=Boolean(process.env.SMTP_HOST&&process.env.SMTP_USER&&process.env.SMTP_PASS&&process.env.MAIL_FROM);
 const mailer=mailReady?nodemailer.createTransport({host:process.env.SMTP_HOST,port:Number(process.env.SMTP_PORT||587),secure:String(process.env.SMTP_SECURE||'false')==='true',auth:{user:process.env.SMTP_USER,pass:process.env.SMTP_PASS},connectionTimeout:10000,greetingTimeout:10000,socketTimeout:15000}):null;
 app.disable('x-powered-by');app.set('trust proxy',1);app.use(express.json({limit:'8kb'}));
