@@ -5,6 +5,7 @@ const connectPgSimple=require('connect-pg-simple');
 const nodemailer=require('nodemailer');
 const {OAuth2Client}=require('google-auth-library');
 const crypto=require('node:crypto');
+const quartzDatabase=require('@xsoftwareabdullah1-create/quartz-database');
 const required=['DATABASE_URL','SESSION_SECRET','QUARTZ_WEB_URL'];
 const publicUrl=process.env.QUARTZ_PUBLIC_URL||process.env.RENDER_EXTERNAL_URL;
 if(!publicUrl){console.error('Missing required environment variable: QUARTZ_PUBLIC_URL (or Render RENDER_EXTERNAL_URL).');process.exit(1);}
@@ -106,12 +107,7 @@ async function start(){
  await pool.query('UPDATE quartz_users SET login_email=LOWER(google_email) WHERE login_email IS NULL AND google_email IS NOT NULL AND email_verified=TRUE');
  await pool.query('CREATE UNIQUE INDEX IF NOT EXISTS quartz_users_login_email_unique ON quartz_users(login_email) WHERE login_email IS NOT NULL');
  await pool.query(`CREATE TABLE IF NOT EXISTS quartz_email_codes(email TEXT PRIMARY KEY,code_hash BYTEA NOT NULL,expires_at TIMESTAMPTZ NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,last_sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
- await pool.query(`CREATE TABLE IF NOT EXISTS quartz_profiles(user_id BIGINT PRIMARY KEY REFERENCES quartz_users(id) ON DELETE CASCADE,display_name VARCHAR(120) NOT NULL DEFAULT '',bio VARCHAR(1000) NOT NULL DEFAULT '',avatar_url TEXT,timezone VARCHAR(64) NOT NULL DEFAULT 'UTC',updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
- await pool.query(`CREATE TABLE IF NOT EXISTS quartz_settings(user_id BIGINT PRIMARY KEY REFERENCES quartz_users(id) ON DELETE CASCADE,settings JSONB NOT NULL DEFAULT '{}'::jsonb,updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
- await pool.query(`CREATE TABLE IF NOT EXISTS quartz_history(id BIGSERIAL PRIMARY KEY,user_id BIGINT NOT NULL REFERENCES quartz_users(id) ON DELETE CASCADE,kind VARCHAR(40) NOT NULL,title VARCHAR(300) NOT NULL,detail VARCHAR(2000),metadata JSONB NOT NULL DEFAULT '{}'::jsonb,created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
- await pool.query('CREATE INDEX IF NOT EXISTS quartz_history_user_created_idx ON quartz_history(user_id,created_at DESC)');
- await pool.query(`CREATE TABLE IF NOT EXISTS quartz_files(id BIGSERIAL PRIMARY KEY,user_id BIGINT NOT NULL REFERENCES quartz_users(id) ON DELETE CASCADE,name VARCHAR(255) NOT NULL,mime_type VARCHAR(120) NOT NULL,size_bytes BIGINT NOT NULL CHECK(size_bytes>=0 AND size_bytes<=10485760),storage_key TEXT NOT NULL,created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
- await pool.query('CREATE INDEX IF NOT EXISTS quartz_files_user_created_idx ON quartz_files(user_id,created_at DESC)');
+ await quartzDatabase.migrate(pool);
 
  const port=Number(process.env.PORT||8788);app.listen(port,'0.0.0.0',()=>console.log('Quartz auth listening on :'+port+'; email sign-in '+(mailReady?'enabled':'disabled (SMTP not configured)')));
 }
