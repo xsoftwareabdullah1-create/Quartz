@@ -5,12 +5,13 @@ const connectPgSimple=require('connect-pg-simple');
 const nodemailer=require('nodemailer');
 const {OAuth2Client}=require('google-auth-library');
 const crypto=require('node:crypto');
-const required=['DATABASE_URL','GOOGLE_CLIENT_ID','GOOGLE_CLIENT_SECRET','SESSION_SECRET','QUARTZ_PUBLIC_URL','QUARTZ_WEB_URL'];
+const required=['DATABASE_URL','SESSION_SECRET','QUARTZ_PUBLIC_URL','QUARTZ_WEB_URL'];
 for(const key of required){if(!process.env[key]){console.error('Missing required environment variable: '+key);process.exit(1);}}
 if(process.env.SESSION_SECRET.length<32){console.error('SESSION_SECRET must contain at least 32 characters.');process.exit(1);}
 const app=express(),pool=new pg.Pool({connectionString:process.env.DATABASE_URL,ssl:process.env.DATABASE_SSL==='disable'?false:{rejectUnauthorized:true}});
 const callback=new URL('/auth/google/callback',process.env.QUARTZ_PUBLIC_URL).toString();
-const oauth=new OAuth2Client(process.env.GOOGLE_CLIENT_ID,process.env.GOOGLE_CLIENT_SECRET,callback);
+const googleReady=Boolean(process.env.GOOGLE_CLIENT_ID&&process.env.GOOGLE_CLIENT_SECRET);
+const oauth=googleReady?new OAuth2Client(process.env.GOOGLE_CLIENT_ID,process.env.GOOGLE_CLIENT_SECRET,callback):null;
 const PgStore=connectPgSimple(session),webOrigin=new URL(process.env.QUARTZ_WEB_URL).origin,cookieSecure=new URL(process.env.QUARTZ_PUBLIC_URL).protocol==='https:';
 const mailReady=Boolean(process.env.SMTP_HOST&&process.env.SMTP_USER&&process.env.SMTP_PASS&&process.env.MAIL_FROM);
 const mailer=mailReady?nodemailer.createTransport({host:process.env.SMTP_HOST,port:Number(process.env.SMTP_PORT||587),secure:String(process.env.SMTP_SECURE||'false')==='true',auth:{user:process.env.SMTP_USER,pass:process.env.SMTP_PASS},connectionTimeout:10000,greetingTimeout:10000,socketTimeout:15000}):null;
@@ -45,7 +46,7 @@ async function provisionEmailIdentity(email){
   await c.query('COMMIT');return q.rows[0];
  }catch(e){await c.query('ROLLBACK');if(e.code==='23505')throw new Error('Account conflict; please try again');throw e;}finally{c.release();}
 }
-app.get('/health',async(_req,res)=>{try{await pool.query('SELECT 1');res.json({ok:true,service:'quartz-auth',emailSignInConfigured:mailReady});}catch{res.status(503).json({ok:false});}});
+app.get('/health',async(_req,res)=>{try{await pool.query('SELECT 1');res.json({ok:true,service:'quartz-auth',emailSignInConfigured:mailReady,googleSignInConfigured:googleReady});}catch{res.status(503).json({ok:false});}});
 app.post('/auth/email/request',async(req,res)=>{if(!mailReady)return res.status(503).json({error:'Email sign-in is not configured on the server yet.'});const email=normalizeEmail(req.body?.email);if(!validEmail(email))return res.status(400).json({error:'Enter a valid email address.'});try{
  const recent=await pool.query('SELECT last_sent_at FROM quartz_email_codes WHERE email=$1',[email]);
  if(recent.rowCount&&Date.now()-new Date(recent.rows[0].last_sent_at).getTime()<60000)return res.status(429).json({error:'Please wait 60 seconds before requesting another code.'});
@@ -61,8 +62,8 @@ app.post('/auth/email/verify',async(req,res,next)=>{const email=normalizeEmail(r
  if(!valid)return res.status(401).json({error:'That code is invalid or expired. Request a new code and try again.'});
  const user=await provisionEmailIdentity(email);return saveSession(req,res,next,user);
  }catch(e){next(e);}});
-app.get('/auth/google',(req,res,next)=>{const state=crypto.randomBytes(32).toString('hex');req.session.oauthState=state;req.session.save(err=>{if(err)return next(err);res.redirect(oauth.generateAuthUrl({access_type:'online',scope:['openid','email','profile'],state,prompt:'select_account'}));});});
-app.get('/auth/google/callback',async(req,res,next)=>{try{
+app.get('/auth/google',(req,res,next)=>{if(!googleReady)return res.status(503).send('Google sign-in is not configured.');const state=crypto.randomBytes(32).toString('hex');req.session.oauthState=state;req.session.save(err=>{if(err)return next(err);res.redirect(oauth.generateAuthUrl({access_type:'online',scope:['openid','email','profile'],state,prompt:'select_account'}));});});
+app.get('/auth/google/callback',async(req,res,next)=>{if(!googleReady)return res.status(503).send('Google sign-in is not configured.');try{
  const state=req.query.state;
  if(!req.query.code||typeof state!=='string'||!req.session.oauthState||Buffer.byteLength(state)!==Buffer.byteLength(req.session.oauthState)||!crypto.timingSafeEqual(Buffer.from(state),Buffer.from(req.session.oauthState)))return res.status(400).send('Invalid OAuth state. Return to Quartz and try again.');
  delete req.session.oauthState;
