@@ -1,10 +1,18 @@
 (() => {
  const cfg=window.QUARTZ_CONFIG||{},base=String(cfg.authBase||'').replace(/\/$/,'');
  const link=document.querySelector('#google-signin'),status=document.querySelector('#account-status'),out=document.querySelector('#google-signout');
- if(!link||!status||!out)return;
- if(!base){link.hidden=true;status.textContent='Sign-in is not configured yet.';return;}
+ const panel=document.querySelector('#email-signin-panel'),openEmail=document.querySelector('#email-signin-open'),closeEmail=document.querySelector('#email-signin-close');
+ const form=document.querySelector('#email-request-form'),verifyForm=document.querySelector('#email-verify-form'),emailInput=document.querySelector('#email-address'),codeInput=document.querySelector('#email-code'),sendButton=document.querySelector('#email-send-code'),verifyButton=document.querySelector('#email-verify-code'),message=document.querySelector('#email-auth-message');
+ if(!link||!status||!out||!panel||!form||!verifyForm)return;
+ if(!base){link.hidden=true;openEmail.hidden=true;status.textContent='Sign-in is not configured yet.';return;}
  link.href=base+'/auth/google';
- async function load(){try{const r=await fetch(base+'/auth/me',{credentials:'include'});if(!r.ok)return;const d=await r.json();if(!d.authenticated||!d.user)return;status.textContent='Signed in as '+d.user.display_name+' · '+d.user.email;link.hidden=true;out.hidden=false;}catch{status.textContent='Quartz account service unavailable. Check configuration.';}}
- out.addEventListener('click',async()=>{out.disabled=true;try{const r=await fetch(base+'/auth/logout',{method:'POST',credentials:'include'});if(!r.ok)throw Error();status.textContent='Signed out. Sign in to access your Quartz account.';link.hidden=false;out.hidden=true;}catch{status.textContent='Could not sign out. Please retry.';}finally{out.disabled=false;}});
+ const say=(text,error=false)=>{message.textContent=text;message.dataset.error=error?'true':'false';};
+ const showPanel=()=>{panel.hidden=false;say('');emailInput.focus();};
+ const hidePanel=()=>{panel.hidden=true;say('');};
+ openEmail.addEventListener('click',showPanel);closeEmail.addEventListener('click',hidePanel);
+ form.addEventListener('submit',async e=>{e.preventDefault();const email=emailInput.value.trim();sendButton.disabled=true;say('Sending your sign-in code…');try{const r=await fetch(base+'/auth/email/request',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Could not send a code.');verifyForm.hidden=false;emailInput.readOnly=true;codeInput.focus();say(d.message||'Check your email for a six-digit code.');}catch(err){say(err.message||'Email sign-in is unavailable.',true);}finally{sendButton.disabled=false;}});
+ verifyForm.addEventListener('submit',async e=>{e.preventDefault();verifyButton.disabled=true;say('Verifying code…');try{const r=await fetch(base+'/auth/email/verify',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:emailInput.value.trim(),code:codeInput.value.trim()})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Code verification failed.');hidePanel();status.textContent='Signed in as '+d.user.display_name+' · '+d.user.email;link.hidden=true;openEmail.hidden=true;out.hidden=false;}catch(err){say(err.message||'Could not verify that code.',true);}finally{verifyButton.disabled=false;}});
+ out.addEventListener('click',async()=>{out.disabled=true;try{const r=await fetch(base+'/auth/logout',{method:'POST',credentials:'include'});if(!r.ok)throw Error();status.textContent='Signed out. Sign in to access your Quartz account.';link.hidden=false;openEmail.hidden=false;out.hidden=true;}catch{status.textContent='Could not sign out. Please retry.';}finally{out.disabled=false;}});
+ async function load(){try{const r=await fetch(base+'/auth/me',{credentials:'include'});if(!r.ok)return;const d=await r.json();if(!d.authenticated||!d.user)return;status.textContent='Signed in as '+d.user.display_name+' · '+d.user.email;link.hidden=true;openEmail.hidden=true;out.hidden=false;}catch{status.textContent='Quartz account service unavailable. Check configuration.';}}
  const p=new URLSearchParams(location.search);if(p.get('quartz_signin')==='success'){p.delete('quartz_signin');history.replaceState({},'',location.pathname+(p.size?'?'+p.toString():'')+location.hash);}load();
 })();
