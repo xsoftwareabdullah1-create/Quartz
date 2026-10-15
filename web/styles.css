@@ -68,3 +68,21 @@ footer{min-height:54px;background:#f2f2f2;border-top:1px solid #dadce0;color:#70
 .email-auth-message{min-height:18px;margin:12px 0 0;color:#188038;font-size:13px}
 .email-auth-message[data-error="true"]{color:#b3261e}
 @media(max-width:600px){.account{gap:6px}.email-open-button{height:35px;padding:0 10px;font-size:12px}.google-button{min-width:74px;padding:0 10px;font-size:12px}.email-panel{top:68px;right:12px;padding:20px}}
+
+/* Google-style overflow menu and privacy controls */
+.more-menu-wrap{position:relative;display:flex;align-items:center}
+.more-menu-button{width:42px;height:42px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:#5f6368;font-size:29px;line-height:1;cursor:pointer}
+.more-menu-button:hover,.more-menu-button[aria-expanded="true"]{background:#f1f3f4}
+.more-menu{position:absolute;z-index:10;top:48px;right:0;width:min(330px,calc(100vw - 24px));padding:8px;background:#fff;border:1px solid #dadce0;border-radius:18px;box-shadow:0 4px 18px #2021242b}
+.more-menu button,.more-menu a{width:100%;min-height:58px;display:flex;align-items:center;gap:12px;padding:10px 12px;border:0;border-radius:12px;background:#fff;color:#202124;text-align:left;text-decoration:none;cursor:pointer}
+.more-menu button:hover,.more-menu a:hover{background:#f1f3f4}
+.more-menu strong,.more-menu small{display:block}
+.more-menu strong{font-size:14px;font-weight:500}
+.more-menu small{margin-top:2px;color:#5f6368;font-size:12px;line-height:1.35}
+.menu-symbol{width:25px;flex:0 0 25px;text-align:center;color:#5f6368;font-size:21px}
+.switch-track{width:34px;height:20px;margin-left:auto;padding:3px;border:1px solid #80868b;border-radius:12px;flex:0 0 34px}
+.switch-track span{display:block;width:12px;height:12px;border-radius:50%;background:#80868b;transition:transform .15s}
+#private-search-toggle[aria-checked="true"] .switch-track{background:#1a73e8;border-color:#1a73e8}
+#private-search-toggle[aria-checked="true"] .switch-track span{background:white;transform:translateX(14px)}
+.private-mode-note{display:inline-flex;align-items:center;gap:6px;margin:18px 0 0;padding:6px 11px;border:1px solid #dadce0;border-radius:18px;color:#3c4043;font-size:12px}
+@media(max-width:600px){.topbar{gap:10px}.more-menu-button{width:36px;height:36px}.more-menu{top:42px}}
