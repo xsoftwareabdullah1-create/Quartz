@@ -86,3 +86,47 @@ footer{min-height:54px;background:#f2f2f2;border-top:1px solid #dadce0;color:#70
 #private-search-toggle[aria-checked="true"] .switch-track span{background:white;transform:translateX(14px)}
 .private-mode-note{display:inline-flex;align-items:center;gap:6px;margin:18px 0 0;padding:6px 11px;border:1px solid #dadce0;border-radius:18px;color:#3c4043;font-size:12px}
 @media(max-width:600px){.topbar{gap:10px}.more-menu-button{width:36px;height:36px}.more-menu{top:42px}}
+
+/* Discover/news feed and Google-like account menu */
+.topbar{gap:14px;padding-right:clamp(16px,3vw,34px)}
+.account-menu-wrap{position:relative;display:flex;align-items:center}
+.account-avatar{width:40px;height:40px;border:1px solid transparent;border-radius:50%;padding:3px;background:#fff;display:grid;place-items:center;cursor:pointer}
+.account-avatar:hover,.account-avatar[aria-expanded="true"]{background:#f1f3f4}
+.account-avatar span{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#1a73e8;color:#fff;font-size:15px;font-weight:600}
+.account-menu{position:absolute;z-index:20;right:0;top:49px;width:min(360px,calc(100vw - 24px));padding:18px;background:#fff;border:1px solid #dadce0;border-radius:24px;box-shadow:0 5px 24px #20212430}
+.account-menu-top{display:flex;align-items:center;gap:13px;padding:3px 2px 17px;border-bottom:1px solid #e8eaed}
+.account-menu-top strong{font-size:15px;font-weight:500}.account-menu-top p{margin:3px 0 0;color:#5f6368;font-size:12px;max-width:225px;overflow-wrap:anywhere}
+.account-avatar.large{width:52px;height:52px;flex:0 0 52px;background:#f1f3f4}.account-avatar.large span{width:42px;height:42px;font-size:20px}
+.account-menu .account{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:16px 0 8px}
+.account-menu .account-status{max-width:none;white-space:normal;overflow-wrap:anywhere;text-align:center;font-size:13px}
+.account-menu .google-button,.account-menu .email-open-button,.account-menu .signout{width:100%;min-height:42px;justify-content:center;border-radius:22px}
+.account-menu .google-button{background:#fff;color:#3c4043;border:1px solid #dadce0;box-shadow:none}
+.account-menu .google-button:hover{background:#f8faff;border-color:#c6dafc}
+.account-menu .google-icon{border:0}
+.account-menu-foot{margin:12px 0 0;text-align:center;color:#70757a;font-size:11px}
+.news-section{width:min(100%,1000px);margin:70px auto 24px;text-align:left}
+.news-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:1.8px;color:#1a73e8;margin:0 0 5px}
+.news-heading h1{font-size:25px;letter-spacing:-.6px;font-weight:500;margin:0;color:#202124}
+.news-subtitle{margin:5px 0 0;color:#5f6368;font-size:13px}
+.news-all{white-space:nowrap;color:#1a73e8;text-decoration:none;font-size:13px;font-weight:500;padding:8px 12px;border-radius:20px}
+.news-all:hover{background:#f1f6fe}
+.news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.news-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid #dadce0;border-radius:14px;background:#fff;text-decoration:none;color:#202124;transition:box-shadow .15s,transform .15s}
+.news-card:hover{box-shadow:0 2px 10px #2021241c;transform:translateY(-2px)}
+.news-art{height:112px;position:relative;display:flex;align-items:flex-end;padding:15px 16px;overflow:hidden;color:#fff}
+.news-art:before,.news-art:after{content:"";position:absolute;border-radius:50%;border:1px solid #ffffff42}
+.news-art:before{width:155px;height:155px;right:-24px;top:-75px}
+.news-art:after{width:105px;height:105px;right:12px;top:-48px}
+.news-art span{position:relative;z-index:1;font-size:11px;letter-spacing:1.8px;font-weight:700}
+.news-art b{position:absolute;right:18px;top:9px;font-size:54px;line-height:1;font-weight:400;opacity:.42}
+.art-india{background:linear-gradient(120deg,#174ea6,#4285f4)}.art-world{background:linear-gradient(120deg,#5b3b9d,#a142f4)}.art-business{background:linear-gradient(120deg,#137333,#34a853)}.art-tech{background:linear-gradient(120deg,#006064,#12a4a6)}.art-sports{background:linear-gradient(120deg,#b06000,#f9ab00)}.art-current{background:linear-gradient(120deg,#a50e0e,#ea4335)}
+.news-card-body{padding:15px 16px 17px;display:flex;flex:1;flex-direction:column;align-items:flex-start}
+.news-category{color:#5f6368;font-size:10px;font-weight:700;letter-spacing:1.1px}
+.news-card h2{font-size:17px;line-height:1.3;letter-spacing:-.2px;font-weight:500;margin:8px 0 7px}
+.news-card p{font-size:12px;line-height:1.55;color:#5f6368;margin:0 0 16px}
+.news-read{margin-top:auto;color:#1a73e8;font-size:12px;font-weight:600}
+.news-disclaimer{margin:15px 0 0;color:#80868b;font-size:11px}
+#results-area{margin-top:28px}
+@media(max-width:760px){.news-section{margin-top:54px}.news-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.news-art{height:95px}.news-card-body{padding:13px}.news-card h2{font-size:16px}}
+@media(max-width:480px){.topbar{gap:7px}.top-link{font-size:12px}.more-menu-button{width:32px}.account-avatar{width:36px;height:36px}.news-section{margin-top:44px}.news-heading h1{font-size:22px}.news-grid{grid-template-columns:1fr}.news-card{display:grid;grid-template-columns:104px minmax(0,1fr);min-height:140px}.news-art{height:100%;min-height:140px;padding:10px}.news-art span{font-size:9px;letter-spacing:1px}.news-art b{font-size:38px;right:8px;top:8px}.news-card-body{padding:14px}.news-card p{margin-bottom:10px}.news-read{font-size:11px}.account-menu{top:44px}}
