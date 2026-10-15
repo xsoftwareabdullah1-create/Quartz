@@ -80,6 +80,7 @@ app.use((e,_req,res,_next)=>{console.error('Quartz auth request failed:',e.messa
 async function start(){
  await pool.query(`CREATE TABLE IF NOT EXISTS quartz_users(id BIGSERIAL PRIMARY KEY,google_sub TEXT UNIQUE,google_email TEXT,login_email TEXT UNIQUE,username VARCHAR(24) NOT NULL UNIQUE,email VARCHAR(255) NOT NULL UNIQUE,display_name VARCHAR(120) NOT NULL,email_verified BOOLEAN NOT NULL DEFAULT FALSE,created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),last_login_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
  await pool.query('ALTER TABLE quartz_users ALTER COLUMN google_sub DROP NOT NULL');
+ await pool.query('ALTER TABLE quartz_users ALTER COLUMN google_email DROP NOT NULL');
  await pool.query('ALTER TABLE quartz_users ADD COLUMN IF NOT EXISTS login_email TEXT');
  await pool.query('CREATE UNIQUE INDEX IF NOT EXISTS quartz_users_login_email_unique ON quartz_users(login_email) WHERE login_email IS NOT NULL');
  await pool.query(`CREATE TABLE IF NOT EXISTS quartz_email_codes(email TEXT PRIMARY KEY,code_hash BYTEA NOT NULL,expires_at TIMESTAMPTZ NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,last_sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
