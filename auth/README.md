@@ -1,12 +1,12 @@
-# Quartz Google Sign-In and @quartz.com IDs
+# Quartz Google and Email Sign-In
 
-Quartz uses Google OAuth to authenticate a person, then assigns a unique Quartz username and address such as `alex.smith@quartz.com`. **This address is an account identifier/alias, not a Gmail inbox. It cannot receive mail until Quartz controls the domain and configures email hosting.** Do not promise a mailbox or OTP delivery before that setup.
+Quartz supports Google OAuth and passwordless email sign-in using a six-digit, one-time code. A verified email login provisions a Quartz account and a unique identifier such as `alex@quartz.com`. **That Quartz address is an account alias, not an inbox. The one-time code is sent to the real email address the user enters.**
 
-## Architecture
-- `src/server.js`: Google OAuth authorization-code flow, session-bound state validation, Google ID-token verification, identity provisioning, profile and logout endpoints.
-- PostgreSQL stores user identities and server-side sessions.
-- `web/auth.js` renders sign-in/profile/sign-out controls.
-- Stable Google `sub` links identities; usernames and aliases are unique in the database.
+## Authentication flows
+- Google: OAuth authorization-code flow with session-bound state and server-side ID-token verification.
+- Email: sends a six-digit code to the entered email address; code expires after 10 minutes and is limited to five verification attempts. A new code cannot be requested for the same address for 60 seconds.
+- PostgreSQL stores users, short-lived code hashes, and server-side sessions.
+- `web/auth.js` provides the email sign-in panel, Google sign-in, session profile and logout.
 
 ## Google OAuth setup
 1. Create/select a project in Google Cloud Console and configure the OAuth consent screen.
@@ -15,9 +15,9 @@ Quartz uses Google OAuth to authenticate a person, then assigns a unique Quartz 
 4. Keep the client secret in your hosting secret manager; never place it in browser files or Android assets.
 
 ## Deployment configuration
-Own/control `quartz.com` before using it as your official email domain. Provision PostgreSQL and deploy this service behind HTTPS. Set the web origin to the exact origin serving the Quartz search page.
+Provision PostgreSQL and deploy this service behind HTTPS. Set `QUARTZ_WEB_URL` to the exact origin serving the Quartz website. Configure the static website's `web/config.js` `authBase` value to the deployed auth service URL (not localhost).
 
-Required environment variables:
+Required server environment variables:
 ```sh
 DATABASE_URL=postgresql://USER:PASSWORD@DB_HOST:5432/DB_NAME
 GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
@@ -26,11 +26,20 @@ SESSION_SECRET=generate-a-random-secret-at-least-32-characters-long
 QUARTZ_PUBLIC_URL=https://auth.example-host.com
 QUARTZ_WEB_URL=https://search.example-host.com
 PORT=8788
-# Optional for trusted local DB only: DATABASE_SSL=disable
 ```
-Default database connection uses TLS certificate verification. Only disable TLS for a trusted local development database.
 
-## Run
+To enable email-code sign-in, set SMTP credentials in the server's secret manager:
+```sh
+SMTP_HOST=smtp.your-mail-provider.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-smtp-username
+SMTP_PASS=your-smtp-password
+MAIL_FROM=Quartz Sign-In <no-reply@your-verified-domain.com>
+```
+Use the exact SMTP settings from your mail provider. Verify the sender/domain with that provider and configure its SPF/DKIM records. SMTP credentials must never be committed to GitHub or shipped in website/Android files. Without these settings the auth service can start, but email sign-in returns a configuration error.
+
+## Run and verify
 Requires Node.js 20+ and PostgreSQL:
 ```sh
 cd auth
@@ -38,15 +47,10 @@ npm install
 npm run check
 npm start
 ``
-Serve `web/` over HTTP/HTTPS (not `file://`). Set `web/config.js` `authBase` to the deployed auth service URL. OAuth callback URI must match exactly. Production uses HTTPS.
+Serve `web/` over HTTP/HTTPS (not `file://`). The database schema is created/updated at service startup. OAuth callback URI must match exactly. Production uses HTTPS.
 
-## Real email delivery is separate
-To make assigned addresses receive mail:
-1. Configure an email hosting or transactional mail provider for the domain.
-2. Publish the provider's SPF and DKIM DNS records and an appropriate DMARC policy.
-3. Verify domain ownership with the provider and store API/SMTP secrets only in the deployment environment.
-4. Decide whether addresses are mailboxes, aliases/forwarders, or sending-only identities.
-5. Implement delivery, bounces, rate limits, abuse controls and recovery before claiming email/OTP works.
-
-## Security
-OAuth state is session-bound and checked; verified Google email is required. Access/refresh tokens are not persisted. PostgreSQL stores sessions; cookies are HttpOnly, SameSite=Lax and Secure on HTTPS. Add production monitoring, rate limiting, privacy/retention policy and incident response before public launch. Never treat an assigned alias as proof an inbox exists.
+## Important limits before public launch
+- `username@quartz.com` is only a Quartz account alias. It does not automatically create a mailbox or receive mail.
+- Configure SMTP sender verification and domain authentication before relying on email delivery.
+- Add distributed IP-based rate limiting, monitoring, privacy/retention policy and incident response before broad public launch. Current email-code protection includes per-address cooldown, expiry and attempt limits; it is not a complete abuse-prevention system.
+- Use secure cookies and HTTPS in production. Keep all credentials in the hosting secret manager.
