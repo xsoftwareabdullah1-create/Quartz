@@ -75,7 +75,7 @@ app.get('/auth/google/callback',async(req,res,next)=>{try{
  req.session.save(e=>{if(e)return next(e);res.redirect(new URL('/?quartz_signin=success',process.env.QUARTZ_WEB_URL).toString());});
  }catch(e){next(e);}});
 app.get('/auth/me',async(req,res)=>{if(!req.session.userId)return res.status(401).json({authenticated:false});try{const q=await pool.query('SELECT username,email,display_name FROM quartz_users WHERE id=$1',[req.session.userId]);if(!q.rowCount){req.session.destroy(()=>{});return res.status(401).json({authenticated:false});}res.json({authenticated:true,user:q.rows[0]});}catch{res.status(500).json({error:'Unable to load Quartz profile'});}});
-app.post('/auth/logout',(req,res)=>req.session.destroy(e=>{if(e)return res.status(500).json({error:'Unable to sign out'});res.clearCookie('quartz.sid',{path:'/',secure:cookieSecure,sameSite:'lax'});res.json({ok:true});}));
+app.post('/auth/logout',(req,res)=>req.session.destroy(e=>{if(e)return res.status(500).json({error:'Unable to sign out'});res.clearCookie('quartz.sid',{path:'/',secure:cookieSecure,sameSite:cookieSecure?'none':'lax'});res.json({ok:true});}));
 app.use((e,_req,res,_next)=>{console.error('Quartz auth request failed:',e.message);if(!res.headersSent)res.status(500).json({error:'Quartz sign-in could not be completed. Please try again later.'});});
 async function start(){
  await pool.query(`CREATE TABLE IF NOT EXISTS quartz_users(id BIGSERIAL PRIMARY KEY,google_sub TEXT UNIQUE,google_email TEXT,login_email TEXT UNIQUE,username VARCHAR(24) NOT NULL UNIQUE,email VARCHAR(255) NOT NULL UNIQUE,display_name VARCHAR(120) NOT NULL,email_verified BOOLEAN NOT NULL DEFAULT FALSE,created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),last_login_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
