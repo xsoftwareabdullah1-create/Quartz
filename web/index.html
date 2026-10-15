@@ -22,6 +22,17 @@
       </a>
       <button class="signout" id="google-signout" type="button" hidden>Sign out</button>
     </div>
+    <div class="more-menu-wrap">
+      <button class="more-menu-button" id="more-menu-button" type="button" aria-label="More options" aria-expanded="false" aria-controls="more-menu">⋮</button>
+      <div class="more-menu" id="more-menu" hidden>
+        <button type="button" id="private-search-toggle" role="switch" aria-checked="false">
+          <span class="menu-symbol">◉</span><span><strong>Private Search</strong><small>Clear this page's query and results</small></span>
+          <span class="switch-track" aria-hidden="true"><span></span></span>
+        </button>
+        <button type="button" id="clear-search-menu"><span class="menu-symbol">×</span><span><strong>Clear Search</strong><small>Clear query and results</small></span></button>
+        <a href="#about" id="about-menu-link"><span class="menu-symbol">ⓘ</span><span><strong>About Quartz</strong><small>Independent search project</small></span></a>
+      </div>
+    </div>
   </nav>
   <section id="email-signin-panel" class="email-panel" aria-labelledby="email-panel-title" hidden>
     <div class="email-panel-heading"><h2 id="email-panel-title">Sign in with email</h2><button id="email-signin-close" type="button" class="panel-close" aria-label="Close email sign-in">×</button></div>
@@ -55,7 +66,7 @@
           <button class="action-button" type="button" id="lucky-search">Explore Quartz</button>
         </div>
       </form>
-      <p class="search-hint">Search results from the Quartz independent index</p>
+      <p class="search-hint">Search results from the Quartz independent index</p><p id="private-mode-note" class="private-mode-note" hidden>◉ Private search is on · this page does not save query history</p>
     </section>
     <section class="results-area" id="results-area" aria-live="polite">
       <p id="status" class="status"></p>
