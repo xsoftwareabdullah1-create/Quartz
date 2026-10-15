@@ -84,6 +84,6 @@ async function start(){
  await pool.query('ALTER TABLE quartz_users ADD COLUMN IF NOT EXISTS login_email TEXT');
  await pool.query('CREATE UNIQUE INDEX IF NOT EXISTS quartz_users_login_email_unique ON quartz_users(login_email) WHERE login_email IS NOT NULL');
  await pool.query(`CREATE TABLE IF NOT EXISTS quartz_email_codes(email TEXT PRIMARY KEY,code_hash BYTEA NOT NULL,expires_at TIMESTAMPTZ NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,last_sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
- const port=Number(process.env.PORT||8788);app.listen(port,'0.0.0.0',()=>console.log('Quartz auth listening on :'+port+'; email sign-in '+(mailReady?'enabled':'disabled (SMTP not configured)'));
+ const port=Number(process.env.PORT||8788);app.listen(port,'0.0.0.0',()=>console.log('Quartz auth listening on :'+port+'; email sign-in '+(mailReady?'enabled':'disabled (SMTP not configured)')));
 }
 start().catch(e=>{console.error('Quartz auth startup failed:',e);process.exit(1);});
